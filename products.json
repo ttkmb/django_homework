@@ -1,0 +1,80 @@
+[
+  {
+    "model": "catalog.product",
+    "pk": 1,
+    "fields": {
+      "name": "Пряник",
+      "description": "еда",
+      "image": "",
+      "category": 1,
+      "price": "150",
+      "published_date": "2023-11-15",
+      "date_last_update": "2023-11-15"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 2,
+    "fields": {
+      "name": "Книга про машины",
+      "description": "чтиво",
+      "image": "",
+      "category": 2,
+      "price": "300",
+      "published_date": "2023-11-15",
+      "date_last_update": "2023-11-15"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 3,
+    "fields": {
+      "name": "Свитер",
+      "description": "чтобы не замерзнуть",
+      "image": "",
+      "category": 3,
+      "price": "1500",
+      "published_date": "2023-11-15",
+      "date_last_update": "2023-11-15"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 4,
+    "fields": {
+      "name": "Ботинки",
+      "description": "чтобы не промокли ноги",
+      "image": "",
+      "category": 3,
+      "price": "1700",
+      "published_date": "2023-11-15",
+      "date_last_update": "2023-11-15"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 5,
+    "fields": {
+      "name": "Молоко",
+      "description": "5 процентов",
+      "image": "",
+      "category": 1,
+      "price": "70",
+      "published_date": "2023-11-15",
+      "date_last_update": "2023-11-15"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 6,
+    "fields": {
+      "name": "Война и мир. Лев Толстой",
+      "description": "клссическая литература",
+      "image": "",
+      "category": 2,
+      "price": "700",
+      "published_date": "2023-11-15",
+      "date_last_update": "2023-11-15"
+    }
+  }
+]
