@@ -1,0 +1,23 @@
+{% extends 'catalog/base.html' %}
+{% load my_tags %}
+{% block content %}
+<h1 style="text-align:center;">{{title}}</h1>
+<div class="container">
+    <div class="card-deck mb-3 text-center">
+        <div class="card mb-6 box-shadow">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal"><img src="{{product.image|mymedia}}"
+                                                         class="bd-placeholder-img card-img-top"
+                                                         style="max-width: 20%;">
+                </h4>
+            </div>
+            <div class="card-body">
+                <h1 class="card-title pricing-card-title">{{product.price}}</h1>
+                <ul class="list-unstyled mt-3 mb-4">
+                    <li>{{product.description}}</li>
+                </ul>
+                <button type="button" class="btn btn-lg btn-block btn-outline-primary">...</button>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
