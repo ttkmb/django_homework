@@ -1,54 +1,42 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.core.paginator import Paginator
-from catalog.forms import AddProductForm
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, DetailView, TemplateView
+
 from catalog.models import Product, UserData
 
 
-def index(request):
-    products = Product.objects.all()
-    context = {
-        'products': products,
-        'title': 'Главная страница',
-    }
-    return render(request, 'catalog/index.html', context)
+class IndexView(TemplateView):
+    model = Product
+    template_name = 'catalog/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['products'] = Product.objects.all().order_by('-price')[:3]
+        context['title'] = 'Самые дорогие товары'
+        return context
 
 
-def contact(request):
-    user_data = UserData.objects.all()
-    context = {
-        'user_data': user_data
-    }
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        phone = request.POST.get('phone')
-        message = request.POST.get('message')
-        print(f'name: {name}, phone: {phone}, message: {message}')
-    return render(request, 'catalog/contact.html', context)
+class ContactCreateView(CreateView):
+    model = UserData
+    fields = ['name', 'surname', 'email']
+    success_url = reverse_lazy('catalog:contact')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_data'] = UserData.objects.all()
+        return context
 
 
-def product(request, product_id):
-    merchandise = get_object_or_404(Product, id=product_id)
-    context = {
-        'product': merchandise,
-        'title': f'Страница товара {merchandise.name}'
-    }
-    return render(request, 'catalog/product.html', context)
+class ProductDetailView(DetailView):
+    model = Product
 
 
-def add_product(request):
-    if request.method == 'POST':
-        form = AddProductForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('index')
-    else:
-        form = AddProductForm()
-    return render(request, 'catalog/add_product.html', {'form': form})
+class ProductCreateView(CreateView):
+    model = Product
+    fields = ['name', 'description', 'image', 'category', 'price']
+    success_url = reverse_lazy('catalog:index')
 
 
-def list_products(request):
-    products = Product.objects.all()
-    paginator = Paginator(products, 1)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'catalog/list_product.html', {'products': products, 'page_obj': page_obj})
+class ProductsListView(ListView):
+    paginate_by = 1
+    model = Product
