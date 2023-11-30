@@ -1,0 +1,31 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+<h1 class="text-center">Все посты</h1>
+<div class="container">
+    <div class="row text-start">
+        {% for post in object_list %}
+        <div class="col-4">
+            <div class="card-deck mb-4 text-center">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal"><img src="{{post.preview}}"
+                                                                 class="bd-placeholder-img card-img-top"
+                                                                 style="max-width: 20%;">
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-title">{{post.title}}</h1>
+                        <ul class="list-unstyled mt-3 mb-4">
+                            <li>{{post.description}}</li>
+                        </ul>
+                        <a href="{% url 'blog:post' post.pk %}">
+                            <button type="button" class="btn btn-lg btn-block btn-outline-primary">Перейти к посту
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endblock %}

@@ -2,7 +2,7 @@
 {% block content %}
 {% load my_tags %}
 <h1 class="text-center">Список всех продуктов</h1>
-{% for product in page_obj %}
+{% for product in object_list %}
 <div class="container">
     <div class="card-deck mb-3 text-center">
         <div class="card mb-6 box-shadow">
