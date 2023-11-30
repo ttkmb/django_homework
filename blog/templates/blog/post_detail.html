@@ -13,6 +13,9 @@
             <div class="card-body">
                 <h1 class="card-title pricing-card-title">{{object.content}}</h1>
             </div>
+            <div class="card-footer">
+                Кол-во просмотров: {{object.count_views}}
+            </div>
             <a href="{% url 'blog:update' post.pk %}">
                 <button type="button" class="btn btn-lg btn-block btn-outline-primary">Редактировать
                 </button>

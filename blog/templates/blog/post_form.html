@@ -11,7 +11,7 @@
         <p><label for="{{f.id_for_label}}">{{f.label}}: </label>{{f}}</p>
         <div>{{f.errors}}</div>
         {% endfor %}
-        <a href="{% url 'blog:posts'%}">
+        <a href="{% url 'blog:post' post.pk %}">
             <input type="submit" class="btn btn-success" value="Сохранить">
         </a>
     </form>
