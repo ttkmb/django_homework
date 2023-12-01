@@ -1,8 +1,10 @@
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 from pytils.translit import slugify
+from django.core.mail import send_mail
 
 from blog.models import Post
+from config import settings
 
 
 class PostListView(ListView):
@@ -31,6 +33,9 @@ class PostCreateView(CreateView):
             new_post.save()
         return super().form_valid(form)
 
+    def get_success_url(self):
+        return reverse_lazy('blog:post', kwargs={'pk': self.object.pk})
+
 
 class PostDetailView(DetailView):
     model = Post
@@ -39,6 +44,13 @@ class PostDetailView(DetailView):
         self.object = super().get_object(queryset)
         self.object.count_views += 1
         self.object.save()
+
+        if self.object.count_views == 100:
+            send_mail(subject='TEST',
+                      message='test',
+                      from_email=settings.EMAIL_HOST_USER,
+                      recipient_list=['qfFkA@example.com'],
+                      fail_silently=False)
         return self.object
 
 
