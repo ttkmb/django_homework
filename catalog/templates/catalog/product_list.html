@@ -13,12 +13,17 @@
                 </h4>
             </div>
             <div class="card-body">
-                <h1 class="card-title pricing-card-title">{{product.price}}</h1>
+                <h1 class="card-title pricing-card-title">{{product.name}} ({{product.price}})</h1>
                 <ul class="list-unstyled mt-3 mb-4">
                     <li>{{product.description}}</li>
                 </ul>
+                {% if product.active_version %}
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>Текущая версия: {{product.active_version.version_number}} </li>
+                    </ul>
+                {% endif %}
                 <a href="{% url 'catalog:product' product.id %}">
-                <button type="button" class="btn btn-lg btn-block btn-outline-primary">Перейти к продукту</button>
+                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">Перейти к продукту</button>
                 </a>
             </div>
         </div>

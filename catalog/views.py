@@ -1,7 +1,10 @@
+from django.db import transaction
+from django.forms import inlineformset_factory
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView, TemplateView
+from django.views.generic import ListView, CreateView, DetailView, TemplateView, UpdateView
 
-from catalog.models import Product, UserData
+from catalog.forms import AddProductForm, VersionForm
+from catalog.models import Product, UserData, Version
 
 
 class IndexView(TemplateView):
@@ -32,10 +35,47 @@ class ProductDetailView(DetailView):
 
 class ProductCreateView(CreateView):
     model = Product
-    fields = ['name', 'description', 'image', 'category', 'price']
+    form_class = AddProductForm
+    extra_context = {'title': 'Добавление нового продукта'}
     success_url = reverse_lazy('catalog:index')
 
 
-class ProductsListView(ListView):
-    paginate_by = 1
+class ProductUpdateView(UpdateView):
     model = Product
+    form_class = AddProductForm
+    extra_context = {'title': 'Редактирование продукта'}
+    success_url = reverse_lazy('catalog:index')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        Formset = inlineformset_factory(Product, Version, form=VersionForm, extra=1, can_delete=False)
+        if self.request.method == 'POST':
+            formset = Formset(self.request.POST, self.request.FILES, instance=self.object, prefix='version')
+        else:
+            formset = Formset(instance=self.object)
+        context['formset'] = formset
+        return context
+
+    def form_valid(self, form):
+        formset = self.get_context_data()['formset']
+        self.object = form.save()
+        self.object.save()
+        if formset.is_valid():
+            formset.instance = self.object
+            formset.save()
+        return super().form_valid(form)
+
+
+class ProductsListView(ListView):
+    paginate_by = 4
+    model = Product
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        for product in context['object_list']:
+            active_version = product.versions.filter(current_version=True).first()
+            if active_version:
+                product.active_version = active_version
+            else:
+                product.active_version = None
+        return context

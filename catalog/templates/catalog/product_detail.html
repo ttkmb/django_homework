@@ -16,7 +16,9 @@
                 <ul class="list-unstyled mt-3 mb-4">
                     <li>{{object.description}}</li>
                 </ul>
-                <button type="button" class="btn btn-lg btn-block btn-outline-primary">...</button>
+                <a href="{% url 'catalog:update_product' product.id %}">
+                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">Изменить продукт</button>
+                </a>
             </div>
         </div>
     </div>
