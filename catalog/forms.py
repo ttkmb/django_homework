@@ -33,6 +33,16 @@ class VersionForm(forms.ModelForm):
         model = Version
         fields = ['version_number', 'version_name', 'current_version']
         widgets = {
-                'version_number': forms.NumberInput(attrs={'class': 'form-input'}),
-                'version_name': forms.TextInput(attrs={'class': 'form-input'}),
+            'version_number': forms.NumberInput(attrs={'class': 'form-input'}),
+            'version_name': forms.TextInput(attrs={'class': 'form-input'}),
         }
+
+    def clean_current_version(self):
+        current_version = self.cleaned_data['current_version']
+        if current_version:
+            versions = self.instance.product.versions.all()
+            active_versions = versions.filter(current_version=True)
+            if active_versions.exists() and self.instance not in active_versions:
+                raise forms.ValidationError('Может быть только одна активная версия продукта.')
+        return current_version
+
