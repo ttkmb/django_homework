@@ -37,12 +37,10 @@ class VersionForm(forms.ModelForm):
             'version_name': forms.TextInput(attrs={'class': 'form-input'}),
         }
 
-    def clean_current_version(self):
-        current_version = self.cleaned_data['current_version']
-        if current_version:
-            versions = self.instance.product.versions.all()
-            active_versions = versions.filter(current_version=True)
-            if active_versions.exists() and self.instance not in active_versions:
-                raise forms.ValidationError('Может быть только одна активная версия продукта.')
-        return current_version
-
+    def clean(self):
+        product = Product.objects.get(id=self.cleaned_data['product'].id)
+        active_version = self.cleaned_data['current_version']
+        count_versions = product.versions.filter(current_version=True).count()
+        if active_version and (count_versions+1) > 1:
+            raise forms.ValidationError(
+                "У продукта может быть только одна активная версия, пожалуйста, выберите только одну активную версию")

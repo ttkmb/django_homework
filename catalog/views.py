@@ -1,7 +1,7 @@
 from django.db import transaction
 from django.forms import inlineformset_factory
-from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView, TemplateView, UpdateView
+from django.urls import reverse_lazy, reverse
+from django.views.generic import ListView, CreateView, DetailView, TemplateView, UpdateView, DeleteView
 
 from catalog.forms import AddProductForm, VersionForm
 from catalog.models import Product, UserData, Version
@@ -44,13 +44,12 @@ class ProductUpdateView(UpdateView):
     model = Product
     form_class = AddProductForm
     extra_context = {'title': 'Редактирование продукта'}
-    success_url = reverse_lazy('catalog:index')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        Formset = inlineformset_factory(Product, Version, form=VersionForm, extra=1, can_delete=False)
+        Formset = inlineformset_factory(Product, Version, form=VersionForm, extra=1)
         if self.request.method == 'POST':
-            context['formset'] = Formset(self.request.POST,  instance=self.object)
+            context['formset'] = Formset(self.request.POST, instance=self.object)
         else:
             context['formset'] = Formset(instance=self.object)
         return context
@@ -61,7 +60,17 @@ class ProductUpdateView(UpdateView):
         if formset.is_valid():
             formset.instance = self.object
             formset.save()
+        else:
+            return self.form_invalid(form)
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('catalog:product', kwargs={'pk': self.object.pk})
+
+
+class ProductDeleteView(DeleteView):
+    model = Product
+    success_url = reverse_lazy('catalog:index')
 
 
 class ProductsListView(ListView):

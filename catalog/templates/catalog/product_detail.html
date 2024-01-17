@@ -16,9 +16,13 @@
                 <ul class="list-unstyled mt-3 mb-4">
                     <li>{{object.description}}</li>
                 </ul>
-                <a href="{% url 'catalog:update_product' product.id %}">
-                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">Изменить продукт</button>
-                </a>
+                <button type="button" class="btn btn-lg btn-block btn-outline-primary"
+                        onclick="window.location.href='{% url 'catalog:update_product' product.id %}'">Изменить продукт
+                </button>
+
+                <button type="button" class="btn btn-lg btn-block btn-outline-danger"
+                        onclick="window.location.href='{% url 'catalog:delete_product' product.id %}'">Удалить продукт
+                </button>
             </div>
         </div>
     </div>
