@@ -1,4 +1,7 @@
 from django import forms
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
+
 from catalog.models import Product, Version, Category
 
 
@@ -41,6 +44,6 @@ class VersionForm(forms.ModelForm):
         product = Product.objects.get(id=self.cleaned_data['product'].id)
         active_version = self.cleaned_data['current_version']
         count_versions = product.versions.filter(current_version=True).count()
-        if active_version and (count_versions+1) > 1:
+        if active_version and (count_versions + 1) > 1:
             raise forms.ValidationError(
                 "У продукта может быть только одна активная версия, пожалуйста, выберите только одну активную версию")

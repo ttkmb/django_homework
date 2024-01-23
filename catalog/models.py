@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 NULLABLE = {'null': True, 'blank': True}
@@ -23,6 +24,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
     published_date = models.DateTimeField(verbose_name='Дата создания', **NULLABLE)
     date_last_update = models.DateTimeField(verbose_name='Дата последнего изменения', **NULLABLE)
+    owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, verbose_name='Продавец', **NULLABLE)
 
     def __str__(self):
         return f'{self.name} {self.category} {self.price}'
