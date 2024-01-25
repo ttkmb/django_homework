@@ -16,13 +16,16 @@
                 <ul class="list-unstyled mt-3 mb-4">
                     <li>{{object.description}}</li>
                 </ul>
+                {% if perms.catalog.change_product %}
                 <button type="button" class="btn btn-lg btn-block btn-outline-primary"
                         onclick="window.location.href='{% url 'catalog:update_product' product.id %}'">Изменить продукт
                 </button>
-
+                {% endif %}
+                {% if user.is_superuser %}
                 <button type="button" class="btn btn-lg btn-block btn-outline-danger"
                         onclick="window.location.href='{% url 'catalog:delete_product' product.id %}'">Удалить продукт
                 </button>
+                {% endif %}
             </div>
         </div>
     </div>

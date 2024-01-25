@@ -47,3 +47,15 @@ class VersionForm(forms.ModelForm):
         if active_version and (count_versions + 1) > 1:
             raise forms.ValidationError(
                 "У продукта может быть только одна активная версия, пожалуйста, выберите только одну активную версию")
+
+
+class ModeratorForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['description', 'category', 'is_published']
+        widgets = {
+            'description': forms.Textarea(
+                attrs={'cols': 50, 'rows': 5, 'class': 'form-input', 'placeholder': 'Описание продукта'}),
+            'category': forms.Select(attrs={'class': 'form-input'}),
+            'is_published': forms.CheckboxInput(attrs={'class': 'form-input'})
+        }

@@ -1,10 +1,10 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.db import transaction
 from django.forms import inlineformset_factory
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView, TemplateView, UpdateView, DeleteView
 
-from catalog.forms import AddProductForm, VersionForm
+from catalog.forms import AddProductForm, VersionForm, ModeratorForm
 from catalog.models import Product, UserData, Version
 
 
@@ -47,10 +47,10 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ProductUpdateView(LoginRequiredMixin, UpdateView):
+class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Product
-    form_class = AddProductForm
     extra_context = {'title': 'Редактирование продукта'}
+    permission_required = 'catalog.change_product'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -73,6 +73,18 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('catalog:product', kwargs={'pk': self.object.pk})
+
+    def get_form_class(self):
+        if self.request.user.is_superuser:
+            return AddProductForm
+        elif self.request.user.is_staff:
+            return ModeratorForm
+
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.request.user == self.object.owner:
+            return self.object
+        raise PermissionError('Недостаточно прав для редактирования этого продукта')
 
 
 class ProductDeleteView(LoginRequiredMixin, DeleteView):

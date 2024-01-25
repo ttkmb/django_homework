@@ -1,19 +1,14 @@
-import random
-
 from django.contrib.auth import get_user_model, authenticate, login
-from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordResetView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.core.mail import send_mail
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
-from django.utils.crypto import get_random_string
 from django.utils.http import urlsafe_base64_decode
 from django.views import View
-from django.views.generic import CreateView, UpdateView, TemplateView, FormView
-
+from django.views.generic import UpdateView, TemplateView, FormView
 from config import settings
-from users.forms import RegisterUserForm, LoginUserForm, UserProfileForm, UserPasswordChangeForm, UserPasswordResetForm
+from users.forms import RegisterUserForm, LoginUserForm, UserProfileForm, UserPasswordChangeForm
 from users.utils import send_email_for_verify, generate_random_password
 
 
