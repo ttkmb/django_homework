@@ -1,11 +1,11 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
-from django.db import transaction
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.forms import inlineformset_factory
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView, TemplateView, UpdateView, DeleteView
 
 from catalog.forms import AddProductForm, VersionForm, ModeratorForm
 from catalog.models import Product, UserData, Version
+from catalog.services import get_categories_from_cache
 
 
 class IndexView(TemplateView):
@@ -104,4 +104,5 @@ class ProductsListView(LoginRequiredMixin, ListView):
                 product.active_version = active_version
             else:
                 product.active_version = None
+        context['categories'] = get_categories_from_cache()
         return context
